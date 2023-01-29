@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="include">
+      <UniqueIdentifier>{40413c88-9744-47f6-903b-8dd33b458bda}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source">
+      <UniqueIdentifier>{3dcd328a-c8c3-449f-aed8-672275ad6adf}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\easylogging++.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\utils.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\OpenXR-DirectX11-Tutorial.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TutorialStructs.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Application.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\D3DRenderer.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\OpenXR.h">
+      <Filter>include</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\easylogging++.cc">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\OpenXR-DirectX11-Tutorial.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Application.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\D3DRenderer.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\OpenXR.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
