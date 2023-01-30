@@ -30,6 +30,9 @@
     <ClInclude Include="src\OpenXR.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="src\OpenXR_setup.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\easylogging++.cc">

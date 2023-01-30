@@ -159,6 +159,7 @@
     <ClInclude Include="src\easylogging++.h" />
     <ClInclude Include="src\OpenXR-DirectX11-Tutorial.h" />
     <ClInclude Include="src\OpenXR.h" />
+    <ClInclude Include="src\OpenXR_setup.h" />
     <ClInclude Include="src\TutorialStructs.h" />
     <ClInclude Include="src\utils.h" />
   </ItemGroup>
