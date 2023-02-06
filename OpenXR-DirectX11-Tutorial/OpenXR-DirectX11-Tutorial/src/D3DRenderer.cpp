@@ -4,6 +4,7 @@
 
 #include "D3DRenderer.h"
 #include "Application.h"
+#include "easylogging++.h"
 
 ID3D11VertexShader*		vertexShader;
 ID3D11PixelShader*		pixelShader;
@@ -134,6 +135,7 @@ void D3DRenderer::Shutdown()
 SwapchainSurfacedata D3DRenderer::MakeSurfaceData(XrBaseInStructure& swapchainImage) 
 {
 	SwapchainSurfacedata result = {};
+	HRESULT d3dResult = S_FALSE;
 
 	// OpenXR has created a swapchain for us. use that to internally track the swapchain.
 	XrSwapchainImageD3D11KHR& d3dSwapchainImage = (XrSwapchainImageD3D11KHR&)swapchainImage;
@@ -159,7 +161,13 @@ SwapchainSurfacedata D3DRenderer::MakeSurfaceData(XrBaseInStructure& swapchainIm
 	depthTextureDescription.ArraySize = colorDescription.ArraySize;
 	depthTextureDescription.Format = DXGI_FORMAT_R32_TYPELESS;
 	depthTextureDescription.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_DEPTH_STENCIL;
-	d3dDevice->CreateTexture2D(&depthTextureDescription, nullptr, &depthTexture);
+	d3dResult = d3dDevice->CreateTexture2D(&depthTextureDescription, nullptr, &depthTexture);
+
+	if (depthTexture == NULL)
+	{
+		LOG(ERROR) << "D3D 11 Failed to create the depth Texture";
+		return result;
+	}
 
 	// And create a view resource for the depth buffer, so we can set that up for rendering to as well!
 	D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilDescription = {};

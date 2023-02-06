@@ -391,7 +391,8 @@ void OpenXR::PollActions()
 	xrSyncActions(session, &actionSyncInfo);
 
 	// Now we'll get the current states of our actions, and store them for later use
-	for (uint32_t hand = 0; hand < 2; hand++) {
+	for (uint32_t hand = 0; hand < 2; hand++) 
+	{
 		XrActionStateGetInfo get_info = { XR_TYPE_ACTION_STATE_GET_INFO };
 		get_info.subactionPath = xrInput.handSubactionPath[hand];
 
@@ -407,12 +408,14 @@ void OpenXR::PollActions()
 		xrInput.handSelect[hand] = selectActionState.currentState && selectActionState.changedSinceLastSync;
 
 		// If we have a select event, update the hand pose to match the event's timestamp
-		if (xrInput.handSelect[hand]) {
+		if (xrInput.handSelect[hand]) 
+		{
 			XrSpaceLocation handSpaceLocation = { XR_TYPE_SPACE_LOCATION };
 			XrResult        res = xrLocateSpace(xrInput.handSpace[hand], applicationSpace, selectActionState.lastChangeTime, &handSpaceLocation);
 			if (XR_UNQUALIFIED_SUCCESS(res) &&
 				(handSpaceLocation.locationFlags & XR_SPACE_LOCATION_POSITION_VALID_BIT) != 0 &&
-				(handSpaceLocation.locationFlags & XR_SPACE_LOCATION_ORIENTATION_VALID_BIT) != 0) {
+				(handSpaceLocation.locationFlags & XR_SPACE_LOCATION_ORIENTATION_VALID_BIT) != 0) 
+			{
 				xrInput.handPose[hand] = handSpaceLocation.pose;
 			}
 		}
