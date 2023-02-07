@@ -123,6 +123,61 @@ int main()
 		return -1;
 	}
 
+	// Tell us about the XR Instance
+	XrInstanceProperties xrInstanceProperties {XR_TYPE_INSTANCE_PROPERTIES};
+	xrResult = xrGetInstanceProperties(instance, &xrInstanceProperties);
+	if (xrResult == XR_SUCCESS)
+	{
+		XrVersion runtimeVerstion = xrInstanceProperties.runtimeVersion;
+		LOG(INFO) << "XR Instance runtime name: " << xrInstanceProperties.runtimeName << " runtime version:" << XR_VERSION_MAJOR(runtimeVerstion) << ":" << XR_VERSION_MINOR(runtimeVerstion) << ":" << XR_VERSION_PATCH(runtimeVerstion);
+	}
+
+	// Tell us something about the system
+	XrSystemGetInfo systemGetInfo {XR_TYPE_SYSTEM_GET_INFO};
+	systemGetInfo.formFactor = XR_FORM_FACTOR_HEAD_MOUNTED_DISPLAY;
+	XrSystemId systemID;
+	xrResult = xrGetSystem(instance, &systemGetInfo, &systemID);
+	if (xrResult == XR_SUCCESS)
+	{
+		LOG(INFO) << "For Form Factor: " << systemGetInfo.formFactor << " Got System ID: " << systemID;
+	}
+
+	XrSystemProperties systemProperties {XR_TYPE_SYSTEM_PROPERTIES};
+	xrResult = xrGetSystemProperties(instance, systemID, &systemProperties);
+	if (xrResult == XR_SUCCESS)
+	{
+		LOG(INFO) << "System Name: " << systemProperties.systemName << " Vendor ID: "<< systemProperties.vendorId;
+	    LOG(INFO) << "Max Swapchain Image Width: " << systemProperties.graphicsProperties.maxSwapchainImageWidth << " Height: " << systemProperties.graphicsProperties.maxSwapchainImageHeight << " Layer Count: " <<systemProperties.graphicsProperties.maxLayerCount;
+		LOG(INFO) << "Orientation Tracking: " << (systemProperties.trackingProperties.orientationTracking == XR_TRUE ? "Enabled" : "Disabled") << " Position Tracking: " << (systemProperties.trackingProperties.positionTracking == XR_TRUE ? "Enabled" : "Disabled");
+	}
+
+	// To get more data, we need to create a session
+	// To create the session, we must identify a valid display subsystem
+	XrSession session;
+
+	XrSessionCreateInfo sessionCreateInfo {XR_TYPE_SESSION_CREATE_INFO};
+	sessionCreateInfo.systemId = systemID;
+	xrResult = xrCreateSession(instance, &sessionCreateInfo, &session);
+	if (xrResult != XR_SUCCESS)
+	{
+		LOG(ERROR) << "Failed to create the XR Session";
+		return -1;
+	}
+	// What spaces does the hardware support?
+	uint32_t spaceCount = 0;
+	xrEnumerateReferenceSpaces(session, 0, &spaceCount, nullptr);
+
+	if (spaceCount > 0)
+	{
+		std::vector<XrReferenceSpaceType> spaces(spaceCount);
+		xrResult = xrEnumerateReferenceSpaces(session, spaceCount, &spaceCount, spaces.data());
+		if (xrResult != XR_SUCCESS)
+		{
+			LOG(ERROR) << "Failed to enumerate the reference spaces";
+			return -1;
+		}
+	}
+	xrDestroySession(session);
 	xrDestroyInstance(instance);
 
 	return 0;
