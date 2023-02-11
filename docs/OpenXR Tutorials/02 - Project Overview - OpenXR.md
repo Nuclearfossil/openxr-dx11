@@ -10,12 +10,12 @@ Lets first off talk about what OpenXR isn't:
 With that out of the way, what is OpenXR?
 - First off, it's an open, royalty-free API standard from the Khronos group that provides codebases with native access to a range of devices across various HMD providers.
 - The API provides a hardware abstraction for core pose predictions, frame timing and spatial input functionality.
-- It also exposes a set of cross vendor and vendor specific extensions that enable additional features beyond what is exposed by the OpenXR 1.0 core specification. For example:
+- It also exposes a set of cross vendor and vendor specific extensions that enable additional features beyond what is exposed by the OpenXR 1.0 core specification. For example: ^e6f366
 	- eye tracking
 	- spatial mapping
 	- articulated hand tracking
 
-You can consider extensions the most powerful aspect of the OpenXR specification. Based upon your needs, and the platform you are targeting, you can enable extensions in OpenXR to give you additional functionality.
+You can consider extensions the most powerful aspect of the OpenXR specification. Based upon your needs, and the platform you are targeting, you can enable extensions in OpenXR to give you additional functionality. ^extensions
 
 As it stands, there are three kinds of OpenXR extensions:
 1. Vendor extensions. These enable, based on the HMD vendor, access to specific features. For example, Foveated Gaze rendering on Oculus devices.

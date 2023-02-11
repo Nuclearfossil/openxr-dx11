@@ -10,8 +10,6 @@
 //  This library is released under the MIT Licence.
 //  https://github.com/amrayn/easyloggingpp/blob/master/LICENSE
 //
-//  https://amrayn.com
-//  http://muflihun.com
 //
 
 #include "easylogging++.h"
