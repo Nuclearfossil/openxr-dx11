@@ -20,7 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\easylogging++.cc" />
-    <ClCompile Include="src\OpenXR-Tutorial-001.cpp" />
+    <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\easylogging++.h" />
@@ -28,7 +28,7 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{FB5B31F0-63B8-46BC-83D4-3D3C8A49CC3C}</ProjectGuid>
+    <ProjectGuid>{09fd67a4-6986-416e-9cf3-3d7fa8c338d4}</ProjectGuid>
     <RootNamespace>OpenXRTutorial001</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>

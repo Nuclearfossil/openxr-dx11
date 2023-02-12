@@ -8,18 +8,6 @@
         "type": "tabs",
         "children": [
           {
-            "id": "d7c4f39a0838413a",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "README.md",
-                "mode": "source",
-                "source": false
-              }
-            }
-          },
-          {
             "id": "7da8549b87f399c9",
             "type": "leaf",
             "state": {
@@ -37,7 +25,19 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "01 - Project Overview - DirectX 11.md",
+                "file": "03 - Basic Initialization - Part 1.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "356e763f654256b0",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "04 - More Initialization.md",
                 "mode": "source",
                 "source": false
               }
@@ -110,7 +110,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "01 - Project Overview - DirectX 11.md",
+                "file": "04 - More Initialization.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -127,7 +127,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "01 - Project Overview - DirectX 11.md",
+                "file": "04 - More Initialization.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -150,7 +150,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "01 - Project Overview - DirectX 11.md"
+                "file": "04 - More Initialization.md"
               }
             }
           }
@@ -171,11 +171,15 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "eebcb2d88fa02cb3",
+  "active": "356e763f654256b0",
   "lastOpenFiles": [
+    "03 - Basic Initialization - Part 1.md",
+    "04 - More Initialization.md",
+    "().md",
     "02 - Project Overview - OpenXR.md",
-    "images/Pasted image 20230129212240.png",
+    "03.01 - Why OpenXR Structs Have to redefine their type.md",
+    "README.md",
     "01 - Project Overview - DirectX 11.md",
-    "README.md"
+    "images/Pasted image 20230129212240.png"
   ]
 }

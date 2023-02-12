@@ -92,11 +92,11 @@ const char* XrSpaceToString(XrReferenceSpaceType spaceType)
     return result;
 }
 
-void LogXRFailure(XrInstance instance, XrResult result)
+void LogXRFailure(XrInstance instance, XrResult result, const char* message)
 {
     char buffer[XR_MAX_RESULT_STRING_SIZE];
     xrResultToString(instance, result, buffer);
-    LOG(ERROR) << "Unable to get the 'xrGetD3D11GraphicsRequirementsKHR' function pointer." << buffer;
+    LOG(ERROR) << message << " : " << buffer;
 }
 
 bool LogExtensions()
@@ -107,7 +107,7 @@ bool LogExtensions()
 	xrResult = xrEnumerateInstanceExtensionProperties(nullptr, 0, &extensionCount, nullptr);
 	if (xrResult != XR_SUCCESS)
 	{
-		LOG(ERROR) << "Failed to enumerate the Instance Extension Properties";
+		LogXRFailure(nullptr, xrResult, "Failed to enumerate the Instance Extension Properties");
 		return false;
 	}
 
@@ -122,7 +122,7 @@ bool LogExtensions()
 	xrResult = xrEnumerateInstanceExtensionProperties(nullptr, extensionCount, &extensionCount, availableExtensions.data());
 	if (xrResult != XR_SUCCESS)
 	{
-		LOG(ERROR) << "Failed to enumerate the Instance Extension Properties";
+        LogXRFailure(nullptr, xrResult, "Failed to enumerate the Instance Extension Properties");
 		return false;
 	}
 
@@ -142,7 +142,7 @@ void LogApiLayers()
 	XrResult xrResult = xrEnumerateApiLayerProperties(0, &layerCount, nullptr);
 	if (xrResult != XR_SUCCESS)
 	{
-		LOG(ERROR) << "Failed to enumerate the Instance Extension Properties";
+        LogXRFailure(nullptr, xrResult, "Failed to enumerate the Instance Extension Properties");
 		return;
 	}
 
@@ -153,7 +153,7 @@ void LogApiLayers()
 		xrResult = xrEnumerateApiLayerProperties(layerCount, &layerCount, layers.data());
 		if (xrResult != XR_SUCCESS)
 		{
-			LOG(ERROR) << "Failed to enumerate the Instance Extension Properties";
+            LogXRFailure(nullptr, xrResult, "Failed to enumerate the Instance Extension Properties");
 			return;
 		}
 		for (auto& property : layers)
@@ -163,22 +163,49 @@ void LogApiLayers()
 	}
 }
 
-bool LogXRInstance(XrResult xrResult, XrInstance instance)
+bool CreateXRInstance(XrInstance& instance)
 {
+	const char* necessaryExtensions[] =
+	{
+		XR_KHR_D3D11_ENABLE_EXTENSION_NAME, // Use Direct3D11 for rendering
+		XR_EXT_DEBUG_UTILS_EXTENSION_NAME,  // Debug utils for extra info
+	};
+
+	XrInstanceCreateInfo xrInstanceCreateInfo{ XR_TYPE_INSTANCE_CREATE_INFO };
+	xrInstanceCreateInfo.applicationInfo.apiVersion = XR_CURRENT_API_VERSION;
+	strcpy_s(xrInstanceCreateInfo.applicationInfo.applicationName, "Tutorial");
+	xrInstanceCreateInfo.enabledExtensionCount = 2;
+	xrInstanceCreateInfo.enabledExtensionNames = necessaryExtensions;
+
+	XrResult xrResult = xrCreateInstance(&xrInstanceCreateInfo, &instance);
+	if (xrResult != XR_SUCCESS)
+	{
+		LogXRFailure(instance, xrResult, "Failed to create the XR Instance");
+		return false;
+	}
+	return true;
+}
+
+bool LogXRInstance(XrInstance instance)
+{
+    XrResult xrResult;
     XrInstanceProperties xrInstanceProperties{ XR_TYPE_INSTANCE_PROPERTIES };
     xrResult = xrGetInstanceProperties(instance, &xrInstanceProperties);
 
-    if (xrResult == XR_SUCCESS)
+    if (xrResult != XR_SUCCESS)
     {
-        XrVersion runtimeVerstion = xrInstanceProperties.runtimeVersion;
-        LOG(INFO) << "XR Instance runtime name: " << xrInstanceProperties.runtimeName << " runtime version:" << XR_VERSION_MAJOR(runtimeVerstion) << ":" << XR_VERSION_MINOR(runtimeVerstion) << ":" << XR_VERSION_PATCH(runtimeVerstion);
+        LogXRFailure(nullptr, xrResult, "Failed to get the XR Instance properties.");
+        return false;
     }
+    XrVersion runtimeVerstion = xrInstanceProperties.runtimeVersion;
+    LOG(INFO) << "XR Instance runtime name: " << xrInstanceProperties.runtimeName << " runtime version:" << XR_VERSION_MAJOR(runtimeVerstion) << ":" << XR_VERSION_MINOR(runtimeVerstion) << ":" << XR_VERSION_PATCH(runtimeVerstion);
 
-    return xrResult == XR_SUCCESS;
+    return true;
 }
 
-bool LogSystemInfoAndProperties(XrResult xrResult, XrInstance instance, XrSystemId& systemID)
+bool GetSystemIdAndLogProperties(XrInstance instance, XrSystemId& systemID)
 {
+    XrResult xrResult;
     XrSystemGetInfo systemGetInfo{ XR_TYPE_SYSTEM_GET_INFO };
     systemGetInfo.formFactor = XR_FORM_FACTOR_HEAD_MOUNTED_DISPLAY;
     xrResult = xrGetSystem(instance, &systemGetInfo, &systemID);
@@ -186,6 +213,12 @@ bool LogSystemInfoAndProperties(XrResult xrResult, XrInstance instance, XrSystem
     {
         LOG(INFO) << "For Form Factor: " << systemGetInfo.formFactor << " Got System ID: " << systemID;
     }
+
+	if (systemID == XR_NULL_SYSTEM_ID)
+	{
+		LOG(ERROR) << "Failed to get a valid system ID";
+		return false;
+	}
 
     XrSystemProperties systemProperties{ XR_TYPE_SYSTEM_PROPERTIES };
     xrResult = xrGetSystemProperties(instance, systemID, &systemProperties);
@@ -237,9 +270,49 @@ bool CreateXRSession(ID3D11Device* d3dDevice, XrResult& xrResult, XrInstance ins
 	xrResult = xrCreateSession(instance, &sessionCreateInfo, &session);
 	if (xrResult != XR_SUCCESS)
 	{
-		LogXRFailure(instance, xrResult);
+		LogXRFailure(instance, xrResult, "Failed to create the XR Session");
 		return false;
 	}
+
+	return true;
+}
+
+bool InitD3D11(XrInstance instance, XrSystemId systemID, ID3D11Device** d3dDevice, ID3D11DeviceContext** d3dContext)
+{
+	// First off, we need to get the function pointer to the xrGetD3D11GraphicsRequirementsKHR extension
+	PFN_xrGetD3D11GraphicsRequirementsKHR xrGetD3D11GraphicsRequirementsKHREXT = nullptr;
+	XrResult xrResult = xrGetInstanceProcAddr(instance, "xrGetD3D11GraphicsRequirementsKHR", (PFN_xrVoidFunction*)(&xrGetD3D11GraphicsRequirementsKHREXT));
+	if (xrResult != XR_SUCCESS)
+	{
+		LogXRFailure(instance, xrResult, "Failed to get the D3D 11 Graphics requirements.");
+		return true;
+	}
+
+	XrGraphicsRequirementsD3D11KHR requirement = { XR_TYPE_GRAPHICS_REQUIREMENTS_D3D11_KHR };
+	xrResult = xrGetD3D11GraphicsRequirementsKHREXT(instance, systemID, &requirement);
+
+	if (xrResult != XR_SUCCESS)
+	{
+		LogXRFailure(instance, xrResult, "Failed to get the KHR D3D11 graphics requirements");
+		return false;
+	}
+
+	IDXGIAdapter1* adapter = GetAdapter(requirement.adapterLuid);
+	D3D_FEATURE_LEVEL featureLevels[] = { D3D_FEATURE_LEVEL_11_0 };
+
+	if (adapter == nullptr)
+	{
+		LOG(ERROR) << "Failed to create the DXGI Adapter";
+		return true;
+	}
+
+	if (FAILED(D3D11CreateDevice(adapter, D3D_DRIVER_TYPE_UNKNOWN, 0, 0, featureLevels, _countof(featureLevels), D3D11_SDK_VERSION, d3dDevice, nullptr, d3dContext)))
+	{
+		LOG(ERROR) << "Failed to create the D3D11 Device";
+		return true;
+	}
+
+	adapter->Release();
 
 	return true;
 }
@@ -253,68 +326,27 @@ int main()
 	LogApiLayers();
 
 	// So we don't get a crash on exit, we need to create and destroy the XR Instance.
-    const char* necessaryExtensions[] =
-	{
-        XR_KHR_D3D11_ENABLE_EXTENSION_NAME, // Use Direct3D11 for rendering
-        XR_EXT_DEBUG_UTILS_EXTENSION_NAME,  // Debug utils for extra info
-    };
-
-	XrInstanceCreateInfo xrInstanceCreateInfo{ XR_TYPE_INSTANCE_CREATE_INFO };
-	xrInstanceCreateInfo.applicationInfo.apiVersion = XR_CURRENT_API_VERSION;
-	xrInstanceCreateInfo.enabledExtensionCount = 2;
-	xrInstanceCreateInfo.enabledExtensionNames = necessaryExtensions;
-	strcpy_s(xrInstanceCreateInfo.applicationInfo.applicationName, "Tutorial");
 	XrInstance instance;
-
-	XrResult xrResult = xrCreateInstance(&xrInstanceCreateInfo, &instance);
-	if (xrResult != XR_SUCCESS)
-	{
-		LOG(ERROR) << "Failed to create the XR Instance";
-		return -1;
-	}
+    if (!CreateXRInstance(instance)) return -1;
 
 	// Tell us about the XR Instance
-	LogXRInstance(xrResult, instance);
+	LogXRInstance(instance);
 
 	// Tell us something about the system
     XrSystemId systemID;
-	LogSystemInfoAndProperties(xrResult, instance, systemID);
+	GetSystemIdAndLogProperties(instance, systemID);
 
 	// Initialize DirectX so we can get a D3D Device to play with
-	// First off, we need to get the function pointer to the xrGetD3D11GraphicsRequirementsKHR extension
-	PFN_xrGetD3D11GraphicsRequirementsKHR xrGetD3D11GraphicsRequirementsKHREXT = nullptr;
-	xrResult = xrGetInstanceProcAddr(instance, "xrGetD3D11GraphicsRequirementsKHR", (PFN_xrVoidFunction*)(&xrGetD3D11GraphicsRequirementsKHREXT));
-    if (xrResult != XR_SUCCESS)
-    {
-        LogXRFailure(instance, xrResult);
-        return -1;
-    }
-
-    XrGraphicsRequirementsD3D11KHR requirement = { XR_TYPE_GRAPHICS_REQUIREMENTS_D3D11_KHR };
-    xrGetD3D11GraphicsRequirementsKHREXT(instance, systemID, &requirement);
 
     ID3D11Device*			d3dDevice = nullptr;
     ID3D11DeviceContext*	d3dContext = nullptr;
 
-    IDXGIAdapter1* adapter = GetAdapter(requirement.adapterLuid);
-    D3D_FEATURE_LEVEL featureLevels[] = { D3D_FEATURE_LEVEL_11_0 };
-
-    if (adapter == nullptr)
-    {
-		LOG(ERROR) << "Failed to create the DXGI Adapter";
-        return -1;
-    }
-
-    if (FAILED(D3D11CreateDevice(adapter, D3D_DRIVER_TYPE_UNKNOWN, 0, 0, featureLevels, _countof(featureLevels), D3D11_SDK_VERSION, &d3dDevice, nullptr, &d3dContext)))
-    {
-		LOG(ERROR) << "Failed to create the D3D11 Device";
-        return -1;
-    }
-
-    adapter->Release();
+	if (!InitD3D11(instance, systemID, &d3dDevice, &d3dContext))
+		return -1;
 
     XrSession session;
 
+	XrResult xrResult = XR_SUCCESS;
     if (!CreateXRSession(d3dDevice, xrResult, instance, session, systemID))
 		return -1;
 

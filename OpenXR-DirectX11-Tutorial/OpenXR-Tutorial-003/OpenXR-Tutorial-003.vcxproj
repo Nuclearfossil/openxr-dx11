@@ -28,7 +28,7 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{09fd67a4-6986-416e-9cf3-3d7fa8c338d4}</ProjectGuid>
+    <ProjectGuid>{077845B5-7B94-4714-B2E8-517B74ADF216}</ProjectGuid>
     <RootNamespace>OpenXRTutorial001</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>

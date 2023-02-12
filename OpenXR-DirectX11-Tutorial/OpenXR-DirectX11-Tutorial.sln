@@ -9,6 +9,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenXR-Tutorial-001", "Open
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenXR-Tutorial-002", "OpenXR-Tutorial-002\OpenXR-Tutorial-002.vcxproj", "{FB5B31F0-63B8-46BC-83D4-3D3C8A49CC3C}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenXR-Tutorial-003", "OpenXR-Tutorial-003\OpenXR-Tutorial-003.vcxproj", "{077845B5-7B94-4714-B2E8-517B74ADF216}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -41,6 +43,14 @@ Global
 		{FB5B31F0-63B8-46BC-83D4-3D3C8A49CC3C}.Release|x64.Build.0 = Release|x64
 		{FB5B31F0-63B8-46BC-83D4-3D3C8A49CC3C}.Release|x86.ActiveCfg = Release|Win32
 		{FB5B31F0-63B8-46BC-83D4-3D3C8A49CC3C}.Release|x86.Build.0 = Release|Win32
+		{077845B5-7B94-4714-B2E8-517B74ADF216}.Debug|x64.ActiveCfg = Debug|x64
+		{077845B5-7B94-4714-B2E8-517B74ADF216}.Debug|x64.Build.0 = Debug|x64
+		{077845B5-7B94-4714-B2E8-517B74ADF216}.Debug|x86.ActiveCfg = Debug|Win32
+		{077845B5-7B94-4714-B2E8-517B74ADF216}.Debug|x86.Build.0 = Debug|Win32
+		{077845B5-7B94-4714-B2E8-517B74ADF216}.Release|x64.ActiveCfg = Release|x64
+		{077845B5-7B94-4714-B2E8-517B74ADF216}.Release|x64.Build.0 = Release|x64
+		{077845B5-7B94-4714-B2E8-517B74ADF216}.Release|x86.ActiveCfg = Release|Win32
+		{077845B5-7B94-4714-B2E8-517B74ADF216}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

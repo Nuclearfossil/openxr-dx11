@@ -20,6 +20,12 @@ INITIALIZE_EASYLOGGINGPP\
 #include <vector>
 #include <iostream>
 
+void LogXRFailure(XrInstance instance, XrResult result, const char* message)
+{
+	char buffer[XR_MAX_RESULT_STRING_SIZE];
+	xrResultToString(instance, result, buffer);
+	LOG(ERROR) << message << " : " << buffer;
+}
 
 bool LogExtensions()
 {
@@ -29,7 +35,7 @@ bool LogExtensions()
 	xrResult = xrEnumerateInstanceExtensionProperties(nullptr, 0, &extensionCount, nullptr);
 	if (xrResult != XR_SUCCESS)
 	{
-		LOG(ERROR) << "Failed to enumerate the Instance Extension Properties";
+		LogXRFailure(nullptr, xrResult, "Failed to enumerate the Instance Extension Properties. ");
 		return false;
 	}
 
@@ -44,7 +50,7 @@ bool LogExtensions()
 	xrResult = xrEnumerateInstanceExtensionProperties(nullptr, extensionCount, &extensionCount, availableExtensions.data());
 	if (xrResult != XR_SUCCESS)
 	{
-		LOG(ERROR) << "Failed to enumerate the Instance Extension Properties";
+		LogXRFailure(nullptr, xrResult, "Failed to enumerate the Instance Extension Properties");
 		return false;
 	}
 
@@ -64,7 +70,7 @@ void LogApiLayers()
 	XrResult xrResult = xrEnumerateApiLayerProperties(0, &layerCount, nullptr);
 	if (xrResult != XR_SUCCESS)
 	{
-		LOG(ERROR) << "Failed to enumerate the Instance Extension Properties";
+		LogXRFailure(nullptr, xrResult, "Failed to enumerate the Instance Extension Properties");
 		return;
 	}
 
@@ -75,7 +81,7 @@ void LogApiLayers()
 		xrResult = xrEnumerateApiLayerProperties(layerCount, &layerCount, layers.data());
 		if (xrResult != XR_SUCCESS)
 		{
-			LOG(ERROR) << "Failed to enumerate the Instance Extension Properties";
+			LogXRFailure(nullptr, xrResult, "Failed to enumerate the Instance Extension Properties");
 			return;
 		}
 		for (auto& property : layers)
@@ -85,22 +91,42 @@ void LogApiLayers()
 	}
 }
 
-bool LogXRInstance(XrResult xrResult, XrInstance instance)
+bool CreateXRInstance(XrInstance& instance)
 {
+	XrInstanceCreateInfo xrInstanceCreateInfo{ XR_TYPE_INSTANCE_CREATE_INFO };
+	xrInstanceCreateInfo.applicationInfo.apiVersion = XR_CURRENT_API_VERSION;
+	strcpy_s(xrInstanceCreateInfo.applicationInfo.applicationName, "Tutorial");
+
+	XrResult xrResult = xrCreateInstance(&xrInstanceCreateInfo, &instance);
+	if (xrResult != XR_SUCCESS)
+	{
+		LogXRFailure(instance, xrResult, "Failed to create the XR Instance");
+		return false;
+	}
+	return true;
+}
+
+bool LogXRInstance(XrInstance instance)
+{
+	XrResult xrResult;
     XrInstanceProperties xrInstanceProperties{ XR_TYPE_INSTANCE_PROPERTIES };
     xrResult = xrGetInstanceProperties(instance, &xrInstanceProperties);
 
-    if (xrResult == XR_SUCCESS)
-    {
-        XrVersion runtimeVerstion = xrInstanceProperties.runtimeVersion;
-        LOG(INFO) << "XR Instance runtime name: " << xrInstanceProperties.runtimeName << " runtime version:" << XR_VERSION_MAJOR(runtimeVerstion) << ":" << XR_VERSION_MINOR(runtimeVerstion) << ":" << XR_VERSION_PATCH(runtimeVerstion);
-    }
+	if (xrResult != XR_SUCCESS)
+	{
+		LogXRFailure(instance, xrResult, "Failed to get the XR Instance Properties.");
+		return false;
+	}
 
-    return xrResult == XR_SUCCESS;
+	XrVersion runtimeVerstion = xrInstanceProperties.runtimeVersion;
+    LOG(INFO) << "XR Instance runtime name: " << xrInstanceProperties.runtimeName << " runtime version:" << XR_VERSION_MAJOR(runtimeVerstion) << ":" << XR_VERSION_MINOR(runtimeVerstion) << ":" << XR_VERSION_PATCH(runtimeVerstion);
+
+    return false;
 }
 
-bool LogSystemInfoAndProperties(XrResult xrResult, XrInstance instance, XrSystemId& systemID)
+bool GetSystemIdAndLogProperties(XrInstance instance, XrSystemId& systemID)
 {
+	XrResult xrResult;
     XrSystemGetInfo systemGetInfo{ XR_TYPE_SYSTEM_GET_INFO };
     systemGetInfo.formFactor = XR_FORM_FACTOR_HEAD_MOUNTED_DISPLAY;
     xrResult = xrGetSystem(instance, &systemGetInfo, &systemID);
@@ -111,14 +137,17 @@ bool LogSystemInfoAndProperties(XrResult xrResult, XrInstance instance, XrSystem
 
     XrSystemProperties systemProperties{ XR_TYPE_SYSTEM_PROPERTIES };
     xrResult = xrGetSystemProperties(instance, systemID, &systemProperties);
-    if (xrResult == XR_SUCCESS)
-    {
-        LOG(INFO) << "System Name: " << systemProperties.systemName << " Vendor ID: " << systemProperties.vendorId;
-        LOG(INFO) << "Max Swapchain Image Width: " << systemProperties.graphicsProperties.maxSwapchainImageWidth << " Height: " << systemProperties.graphicsProperties.maxSwapchainImageHeight << " Layer Count: " << systemProperties.graphicsProperties.maxLayerCount;
-        LOG(INFO) << "Orientation Tracking: " << (systemProperties.trackingProperties.orientationTracking == XR_TRUE ? "Enabled" : "Disabled") << " Position Tracking: " << (systemProperties.trackingProperties.positionTracking == XR_TRUE ? "Enabled" : "Disabled");
-    }
+	if (xrResult != XR_SUCCESS)
+	{
+		LogXRFailure(instance, xrResult, "Failed to get the XR System Properties");
+		return false;
+	}
 
-    return xrResult == XR_SUCCESS;
+	LOG(INFO) << "System Name: " << systemProperties.systemName << " Vendor ID: " << systemProperties.vendorId;
+    LOG(INFO) << "Max Swapchain Image Width: " << systemProperties.graphicsProperties.maxSwapchainImageWidth << " Height: " << systemProperties.graphicsProperties.maxSwapchainImageHeight << " Layer Count: " << systemProperties.graphicsProperties.maxLayerCount;
+    LOG(INFO) << "Orientation Tracking: " << (systemProperties.trackingProperties.orientationTracking == XR_TRUE ? "Enabled" : "Disabled") << " Position Tracking: " << (systemProperties.trackingProperties.positionTracking == XR_TRUE ? "Enabled" : "Disabled");
+
+    return false;
 }
 
 int main()
@@ -129,24 +158,15 @@ int main()
 	// What API Layers are available to us?
 	LogApiLayers();
 
-	XrInstanceCreateInfo xrInstanceCreateInfo{ XR_TYPE_INSTANCE_CREATE_INFO };
-	xrInstanceCreateInfo.applicationInfo.apiVersion = XR_CURRENT_API_VERSION;
-	strcpy_s(xrInstanceCreateInfo.applicationInfo.applicationName, "Tutorial");
 	XrInstance instance;
-
-	XrResult xrResult = xrCreateInstance(&xrInstanceCreateInfo, &instance);
-	if (xrResult != XR_SUCCESS)
-	{
-		LOG(ERROR) << "Failed to create the XR Instance";
-		return -1;
-	}
+	if (!CreateXRInstance(instance)) return -1;
 
 	// Tell us about the XR Instance
-	LogXRInstance(xrResult, instance);
+	LogXRInstance(instance);
 
 	// Tell us something about the system
     XrSystemId systemID;
-	LogSystemInfoAndProperties(xrResult, instance, systemID);
+	GetSystemIdAndLogProperties(instance, systemID);
 
 	xrDestroyInstance(instance);
 
