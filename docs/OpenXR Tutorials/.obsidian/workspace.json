@@ -37,14 +37,26 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "04 - More Initialization.md",
+                "file": "README.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "707c5702af6a473f",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "05 - Where we get all the details.md",
                 "mode": "source",
                 "source": false
               }
             }
           }
         ],
-        "currentTab": 2
+        "currentTab": 3
       }
     ],
     "direction": "vertical"
@@ -110,7 +122,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "04 - More Initialization.md",
+                "file": "05 - Where we get all the details.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -127,7 +139,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "04 - More Initialization.md",
+                "file": "05 - Where we get all the details.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -150,7 +162,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "04 - More Initialization.md"
+                "file": "05 - Where we get all the details.md"
               }
             }
           }
@@ -171,14 +183,15 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "356e763f654256b0",
+  "active": "707c5702af6a473f",
   "lastOpenFiles": [
     "03 - Basic Initialization - Part 1.md",
+    "05 - Where we get all the details.md",
+    "README.md",
     "04 - More Initialization.md",
+    "03.01 - Why OpenXR Structs Have to redefine their type.md",
     "().md",
     "02 - Project Overview - OpenXR.md",
-    "03.01 - Why OpenXR Structs Have to redefine their type.md",
-    "README.md",
     "01 - Project Overview - DirectX 11.md",
     "images/Pasted image 20230129212240.png"
   ]

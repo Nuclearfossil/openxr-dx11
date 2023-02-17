@@ -135,6 +135,12 @@ bool GetSystemIdAndLogProperties(XrInstance instance, XrSystemId& systemID)
         LOG(INFO) << "For Form Factor: " << systemGetInfo.formFactor << " Got System ID: " << systemID;
     }
 
+	if (systemID == XR_NULL_SYSTEM_ID)
+	{
+		LOG(ERROR) << "Failed to get a valid system ID";
+		return false;
+	}
+
     XrSystemProperties systemProperties{ XR_TYPE_SYSTEM_PROPERTIES };
     xrResult = xrGetSystemProperties(instance, systemID, &systemProperties);
 	if (xrResult != XR_SUCCESS)
@@ -166,7 +172,8 @@ int main()
 
 	// Tell us something about the system
     XrSystemId systemID;
-	GetSystemIdAndLogProperties(instance, systemID);
+	if (!GetSystemIdAndLogProperties(instance, systemID))
+		return -1;
 
 	xrDestroyInstance(instance);
 

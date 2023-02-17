@@ -21,7 +21,13 @@ Where appropriate, I will link to the code, as well as inline as much code to il
 
 Each page will start with an overview, the main body of the lesson, and a final summary to wrap up concepts.
 
-With that said, let's begin.
-
+# Tutorial Steps
+- [[01 - Project Overview - DirectX 11]] - Where I type a lot of words
+- [[02 - Project Overview - OpenXR]] - Where I type even more words
+- [[03 - Basic Initialization - Part 1]] - Where the Code starts to come alive (OpenXR-Tutorial-001)
+	- [[03.01 - Why OpenXR Structs Have to redefine their type]]
+- [[04 - More Initialization]] - Where we get another step closer to a running bit of code (OpenXR-Tutorial-002)
+- [[05 - Where we get all the details]] - Almost there (OpenXR-Tutorial-003)
+ 
 
 

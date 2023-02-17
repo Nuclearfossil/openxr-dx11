@@ -334,7 +334,8 @@ int main()
 
 	// Tell us something about the system
     XrSystemId systemID;
-	GetSystemIdAndLogProperties(instance, systemID);
+	if (!GetSystemIdAndLogProperties(instance, systemID))
+		return -1;
 
 	// Initialize DirectX so we can get a D3D Device to play with
 
