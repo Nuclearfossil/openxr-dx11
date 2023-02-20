@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "OpenXR Tutorials/03 - Basic Initialization - Part 1.md",
+                "file": "OpenXR Tutorials/05 - Where we get all the details.md",
                 "mode": "source",
                 "source": false
               }
@@ -99,7 +99,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "OpenXR Tutorials/03 - Basic Initialization - Part 1.md",
+                "file": "OpenXR Tutorials/05 - Where we get all the details.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -116,7 +116,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "OpenXR Tutorials/03 - Basic Initialization - Part 1.md",
+                "file": "OpenXR Tutorials/05 - Where we get all the details.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -139,7 +139,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "OpenXR Tutorials/03 - Basic Initialization - Part 1.md"
+                "file": "OpenXR Tutorials/05 - Where we get all the details.md"
               }
             }
           }
@@ -163,7 +163,11 @@
   },
   "active": "99d8fcc931368bcc",
   "lastOpenFiles": [
-    "OpenXR Tutorials/02 - Project Overview - OpenXR.md",
-    "OpenXR Tutorials/03 - Basic Initialization - Part 1.md"
+    "OpenXR Tutorials/04 - Basic Initialization - Part 2.md",
+    "OpenXR Tutorials/03 - Basic Initialization - Part 1.md",
+    "OpenXR Tutorials/05 - Where we get all the details.md",
+    "OpenXR Tutorials/03.01 - Why OpenXR Structs Have to redefine their type.md",
+    "OpenXR Tutorials/README.md",
+    "OpenXR Tutorials/02 - Project Overview - OpenXR.md"
   ]
 }

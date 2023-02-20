@@ -110,5 +110,7 @@ This is also a great way to early-out in your application to say "no, I don't ac
 # Summary
 We're almost there, to get all the information about the device that is attached to your PC. There's still one more bit that requires us to do some D3D 11 investigation. We'll do that in our next session.
 
+Everything that we've touched on can be found in the source code in the Visual Studio project `OpenXR-Tutorial-002`.
+
 # Resources
 - [OpenXR Reference](https://registry.khronos.org/OpenXR/specs/1.0/html/xrspec.html#introduction) The OpenXR reference docs on Khronos

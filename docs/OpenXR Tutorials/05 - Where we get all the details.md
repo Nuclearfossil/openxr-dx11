@@ -24,4 +24,6 @@ In the past, we've taked at length about the `type` property, but we very much g
 We can use the `next` to add additional structures into the that structure for additional OpenXR runtimes to use.
 
 # Summary
+Everything that we've touched on can be found in the source code in the Visual Studio project `OpenXR-Tutorial-003`.
+
 # Resources

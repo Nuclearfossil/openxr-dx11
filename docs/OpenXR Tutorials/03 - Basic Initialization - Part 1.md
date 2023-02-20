@@ -3,7 +3,7 @@ In this section, we're actually looking at code. You can find all the code in th
 
 # Our Project
 ## Project Setting
-I like to have all my additional library includes and lib files in a globally accessible place. Thus, I tend to use package managers like `VCXPROJ` or `Conan` to manage all that. However, I don't want to force the reader to use one of those package managers, so I create two folders called `include` and `libs` to store those additional files:
+I like to have all my additional library includes and lib files in a globally accessible place. Thus, I tend to use package managers like [VCPKG](https://vcpkg.io/en/index.html) or [Conan](https://conan.io/) to manage all that. However, I don't want to force the reader to use one of those package managers, so I create two folders called `include` and `libs` to store those additional files:
 ![[Pasted image 20230210085201.png]]
 ![[Pasted image 20230210085219.png]]
 If you're more comfortable using package managers, that's a far easier way to go.
